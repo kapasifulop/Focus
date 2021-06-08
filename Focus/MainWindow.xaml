@@ -1,0 +1,206 @@
+﻿<Window x:Class="Focus.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Focus"
+        mc:Ignorable="d"
+        Title="Focus" WindowStyle="None" MaxHeight="200" MaxWidth="200" AllowsTransparency="True" Background="Transparent" Height="2000" Width="2000" x:Name="MWindow">
+    <Window.Resources>
+        <Storyboard x:Key="ResizeB">
+            <DoubleAnimation
+                Storyboard.TargetName="OGrid"
+                Storyboard.TargetProperty="Opacity"
+                From="1" To="0" Duration="0:0:0.6"
+                />
+            <DoubleAnimation
+                Storyboard.TargetName="SettingsV"
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1" Duration="0:0:0.6"
+                />
+            <DoubleAnimation
+                Storyboard.TargetName="MWindow"
+                Storyboard.TargetProperty="MaxWidth"    
+                From="200" To="800"
+                Duration="0:0:0.3"
+            />
+            <DoubleAnimation
+                Storyboard.TargetName="MWindow"
+                Storyboard.TargetProperty="Width"    
+                From="200" To="800"
+                Duration="0:0:0.3"
+            />
+            <DoubleAnimation
+                Storyboard.TargetName="MWindow"
+                Storyboard.TargetProperty="MaxHeight"    
+                From="200" To="500"
+                Duration="0:0:0.3"
+                BeginTime="0:0:0.3"
+            />
+            <DoubleAnimation
+                Storyboard.TargetName="MWindow"
+                Storyboard.TargetProperty="Height"    
+                From="200" To="500"
+                BeginTime="0:0:0.3"
+                Duration="0:0:0.3"
+            />
+        </Storyboard>
+        <Storyboard x:Key="ResizeS">
+            <DoubleAnimation
+                Storyboard.TargetName="OGrid"
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1" Duration="0:0:0.6"
+                />
+            <DoubleAnimation
+                Storyboard.TargetName="SettingsV"
+                Storyboard.TargetProperty="Opacity"
+                From="1" To="0" Duration="0:0:0.6"
+                />
+            <DoubleAnimation
+                Storyboard.TargetName="MWindow"
+                Storyboard.TargetProperty="MaxWidth"    
+                From="800" To="200"
+                BeginTime="0:0:0.3"
+                Duration="0:0:0.3"
+            />
+            <DoubleAnimation
+                Storyboard.TargetName="MWindow"
+                Storyboard.TargetProperty="Width"    
+                From="800" To="200"
+                BeginTime="0:0:0.3"
+                Duration="0:0:0.3"
+            />
+            <DoubleAnimation
+                Storyboard.TargetName="MWindow"
+                Storyboard.TargetProperty="MaxHeight"    
+                From="500" To="200"
+                Duration="0:0:0.3"
+            />
+            <DoubleAnimation
+                Storyboard.TargetName="MWindow"
+                Storyboard.TargetProperty="Height"    
+                From="500" To="200"
+                Duration="0:0:0.3"
+            />
+        </Storyboard>
+        <Style x:Key="BStyle" TargetType="{x:Type Border}">
+            <Setter Property="Border.Background" Value="#dcdde1"/>
+            <Setter Property="Margin" Value="7"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Style.Triggers>
+                <Trigger Property="Border.IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#00a8ff" 
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" 
+                                                    Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#f5f2f2" 
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" 
+                                                    Duration="0:0:0.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="IStyle" TargetType="{x:Type Image}">
+            <Setter Property="Image.VerticalAlignment" Value="Center"/>
+            <Setter Property="Image.HorizontalAlignment" Value="Center"/>
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+            <Setter Property="Image.Margin" Value="10"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Border CornerRadius="30" Background="White"/>
+        <Border Background="#bdc3c7" Margin="50,7.5,50,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="6" CornerRadius="2" MouseDown="Top_MouseDown"/>
+        <ScrollViewer x:Name="SettingsV" Margin="15" Visibility="Hidden">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Image Source="images\back.png" VerticalAlignment="Stretch" HorizontalAlignment="Left" MouseDown="Back_Click"/>
+                
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+        <Grid Margin="15" x:Name="OGrid" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--LEFT-->
+            <Border x:Name="Night" MouseDown="Night_MouseDown" Style="{DynamicResource BStyle}">
+                <Border.Resources>
+                    <Storyboard x:Key="Activate" Storyboard.TargetName="Night">
+                        <ColorAnimation 
+                             Storyboard.TargetProperty="Background.Color"
+                             To="#4cd137" Duration="0:0:0.1"/>
+                    </Storyboard>
+                </Border.Resources>
+                <Grid>
+                    <Image Style="{DynamicResource IStyle}" Source="images/moon.png"/>
+                </Grid>
+            </Border>
+
+            <Border x:Name="Gaming" MouseDown="Gaming_MouseDown" Style="{DynamicResource BStyle}" Grid.Row="1">
+                <Border.Resources>
+                    <Storyboard x:Key="Activate" Storyboard.TargetName="Gaming">
+                        <ColorAnimation 
+                             Storyboard.TargetProperty="Background.Color"
+                             To="#4cd137" Duration="0:0:0.1"/>
+                    </Storyboard>
+                </Border.Resources>
+                <Grid>
+                    <Image Style="{DynamicResource IStyle}" Source="images/game.png"/>
+                </Grid>
+            </Border>
+            <!--RIGHT-->
+            <Border x:Name="Working" MouseDown="Working_MouseDown" Style="{DynamicResource BStyle}" Grid.Column="1">
+                <Border.Resources>
+                    <Storyboard x:Key="Activate" Storyboard.TargetName="Working">
+                        <ColorAnimation 
+                             Storyboard.TargetProperty="Background.Color"
+                             To="#4cd137" Duration="0:0:0.1"/>
+                    </Storyboard>
+                </Border.Resources>
+                <Grid>
+                    <Image Style="{DynamicResource IStyle}" Source="images/work.png"/>
+                </Grid>
+            </Border>
+            
+            <Border x:Name="Settings" MouseDown="Settings_MouseDown" Style="{DynamicResource BStyle}" CornerRadius="20" Grid.Row="1" Grid.Column="1">
+                <Border.Resources>
+                    <Storyboard x:Key="Activate" Storyboard.TargetName="Night">
+                        <ColorAnimation 
+                             Storyboard.TargetProperty="Background.Color"
+                             To="#4cd137" Duration="0:0:0.1"/>
+                    </Storyboard>
+                </Border.Resources>
+                <Grid>
+                    <Image Style="{DynamicResource IStyle}" Source="images\settings.png"/>
+                </Grid>
+            </Border>
+            
+            
+        </Grid>
+    </Grid>
+</Window>

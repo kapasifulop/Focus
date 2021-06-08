@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="images\back.png" />
+    <None Remove="images\game.png" />
+    <None Remove="images\moon.png" />
+    <None Remove="images\moon_fill.png" />
+    <None Remove="images\settings.png" />
+    <None Remove="images\work.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\back.png" />
+    <Resource Include="images\game.png" />
+    <Resource Include="images\moon.png" />
+    <Resource Include="images\moon_fill.png" />
+    <Resource Include="images\settings.png" />
+    <Resource Include="images\work.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>
