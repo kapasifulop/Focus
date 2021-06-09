@@ -206,75 +206,125 @@ namespace Focus
             }
         }
         #endregion
-
-        public void ChangeMode(int mode)
+        #region separated desktop
+        public void SDesktop(string dir, string wm, string Desktop)
+        {
+            MKDir(dir);
+            if (!Directory.Exists(dir + @"\focus" + wm))
+            {
+                Directory.CreateDirectory(dir + @"\focus" + wm);
+            }
+            if (!Directory.Exists(dir + @"\focus" + wm + @"\Desktop"))
+            {
+                Directory.CreateDirectory(dir + @"\focus" + wm + @"\Desktop");
+            }
+            //Backing up current desktop
+            if (!IsDirectoryEmpty(Desktop))
+            {
+                if (!IsDirectoryEmpty(dir + @"\focus\Desktop"))
+                {
+                    Directory.Delete(dir + @"\focus\Desktop", true);
+                }
+                DirectoryCopy(Desktop, dir + @"\focus\Desktop");
+            }
+            //clear desktop
+            Debug.WriteLine("Clearing the desktop");
+            try
+            {
+                DirectoryDelete(Desktop);
+            }
+            catch
+            {
+                MessageBox.Show("Error while clearing desktop!");
+            }
+            Debug.WriteLine("Restoring " + wm + " mode desktop");
+            if (!IsDirectoryEmpty(dir + @"\focus" + wm + @"\Desktop"))
+            {
+                DirectoryCopy(dir + @"\focus" + wm + @"\Desktop", Desktop, true);
+            }
+        }
+        #endregion
+        public async void ChangeMode(int mode)
         {
             String dir = Properties.Settings.Default.SaveFolder;
             String Desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             Debug.WriteLine(dir);
-            if(mode == Modes.Night)
+            String wm = "";
+            if (CMod == Modes.Night)
+            {
+                wm = @"\Night";
+            }
+            else if (CMod == Modes.Game)
+            {
+                wm = @"\Game";
+            }
+            else if (CMod == Modes.Work)
+            {
+                wm = @"\Work";
+            }
+            if (mode == Modes.Night)
             {
                 //Separated desktop
                 if (Properties.Settings.Default.MDesktop)
                 {
-                    MKDir(dir);
-                    if(!Directory.Exists(dir + @"\focus\Night"))
-                    {
-                        Directory.CreateDirectory(dir + @"\focus\Night");
-                    }
-                    if(!Directory.Exists(dir + @"\focus\Night\Desktop"))
-                    {
-                        Directory.CreateDirectory(dir + @"\focus\Night\Desktop");
-                    }
-                    //Backing up current desktop
-                    if (!IsDirectoryEmpty(Desktop))
-                    {
-                        if (!IsDirectoryEmpty(dir + @"\focus\Desktop"))
-                        {
-                            Directory.Delete(dir + @"\focus\Desktop", true);
-                        }
-                        DirectoryCopy(Desktop, dir + @"\focus\Desktop");
-                    }
-                    //clear desktop
-                    Debug.WriteLine("Clearing the desktop");
-                    try
-                    {
-                        DirectoryDelete(Desktop);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Error while clearing desktop!");
-                    }
-                    Debug.WriteLine("Restoring night mode desktop");
-                    if (!IsDirectoryEmpty(dir + @"\focus\Night\Desktop")){
-                        DirectoryCopy(dir + @"\focus\Night\Desktop", Desktop, true);
-                    }
+                    SDesktop(dir, wm, Desktop);
                 }
-            }else if(mode == Modes.Default)
+                #region background
+                #endregion
+
+            }else if(mode == Modes.Game)
             {
-                //BACKUP DESKTOP
+                if (Properties.Settings.Default.GDesktop)
+                {
+                    SDesktop(dir, wm, Desktop);
+                }
+                #region background
+                #endregion
+            }
+            else if (mode == Modes.Work)
+            {
+                if (Properties.Settings.Default.WDesktop)
+                {
+                    SDesktop(dir, wm, Desktop);
+                }
+                #region background
+                #endregion
+            }
+            else if(mode == Modes.Default)
+            {
+                #region BUP DESKTOP
+                String n = "";
                 if (CMod == Modes.Night)
                 {
-                    MKDir(dir);
-                    if (!Directory.Exists(dir + @"\focus\Night"))
-                    {
-                        Directory.CreateDirectory(dir + @"\focus\Night");
-                    }
-                    if (!Directory.Exists(dir + @"\focus\Night\Desktop"))
-                    {
-                        Directory.CreateDirectory(dir + @"\focus\Night\Desktop");
-                    }
-                    //BACKUP
-                    if (!IsDirectoryEmpty(Desktop))
-                    {
-                        if (!IsDirectoryEmpty(dir + @"\focus\Night\Desktop\"))
-                        {
-                            Directory.Delete(dir + @"\focus\Night\Desktop", true);
-                        }
-                        DirectoryCopy(Desktop, dir + @"\focus\Night\Desktop");
-                    }
-
+                    n = @"\Night";
+                }else if(CMod == Modes.Game)
+                {
+                    n = @"\Game";
                 }
+                else if(CMod == Modes.Work)
+                {
+                    n = @"\Work";
+                }
+
+                MKDir(dir);
+                if (!Directory.Exists(dir + @"\focus" + n))
+                {
+                    Directory.CreateDirectory(dir + @"\focus" + n);
+                }
+                if (!Directory.Exists(dir + @"\focus" + n + @"\Desktop"))
+                {
+                    Directory.CreateDirectory(dir + @"\focus" + n + @"\Desktop");
+                }
+                //BACKUP
+                if (!IsDirectoryEmpty(Desktop))
+                {
+                    if (!IsDirectoryEmpty(dir + @"\focus" + n + @"\Desktop"))
+                    {
+                        Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
+                    }
+                    DirectoryCopy(Desktop, dir + @"\focus" + n + @"\Desktop");
+                }else Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
+                #endregion
                 //Clear desktop
                 try
                 {
