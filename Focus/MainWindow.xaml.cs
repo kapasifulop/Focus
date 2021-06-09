@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Focus.ForDesktop;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,9 +27,19 @@ namespace Focus
     public partial class MainWindow : Window
     {
         public int CMod = Modes.Default;
+
+        private readonly Desktop _desktop = new Desktop();
+        private readonly DesktopRegistry _registry = new DesktopRegistry();
+        private readonly Storage _storage = new Storage();
+
+
+        public IDictionary<string, string> registryValues;
+        NamedDesktopPoint[] iconPositions;
+
         public MainWindow()
         {
             InitializeComponent();
+            #region Settings
             if (Properties.Settings.Default.SaveFolder.Trim() == "")
             {
                 Properties.Settings.Default.SaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -55,19 +66,20 @@ namespace Focus
                 Properties.Settings.Default.DBg = CurrentWallpapperPath();
                 Properties.Settings.Default.Save();
             }
+            #endregion
+            //SAVE ICON POSITIONS
+            registryValues = _registry.GetRegistryValues();
+            var iconPositions = _desktop.GetIconsPositions();
+            _storage.SaveIconPositions(iconPositions, registryValues, "Default");
         }
 
-        static byte[] SliceMe(byte[] source, int pos)
+        public void restorePos(string FileName = "Default")
         {
-            byte[] destfoo = new byte[source.Length - pos];
-            Array.Copy(source, pos, destfoo, 0, destfoo.Length);
-            return destfoo;
-        }
-
-        public static string CurrentWallpapperPath()
-        {
-            byte[] path = (byte[])Registry.CurrentUser.OpenSubKey("Control Panel\\Desktop").GetValue("TranscodedImageCache");
-            return Encoding.Unicode.GetString(SliceMe(path, 24)).TrimEnd("\0".ToCharArray());
+            var rvals = _storage.GetRegistryValues(FileName);
+            Debug.WriteLine(rvals.Count);
+            _registry.SetRegistryValues(rvals);
+            var ipos = _storage.GetIconPositions(FileName);
+            _desktop.SetIconPositions(ipos);
         }
 
         private void Top_MouseDown(object sender, MouseButtonEventArgs e)
@@ -94,7 +106,6 @@ namespace Focus
             }
             if (WMod == 5)
             {
-                Debug.Write("CMOD");
                 ChangeMode(Modes.Default);
             }
         }
@@ -160,6 +171,19 @@ namespace Focus
         }
 
         #region functions
+
+        static byte[] SliceMe(byte[] source, int pos)
+        {
+            byte[] destfoo = new byte[source.Length - pos];
+            Array.Copy(source, pos, destfoo, 0, destfoo.Length);
+            return destfoo;
+        }
+
+        public static string CurrentWallpapperPath()
+        {
+            byte[] path = (byte[])Registry.CurrentUser.OpenSubKey("Control Panel\\Desktop").GetValue("TranscodedImageCache");
+            return Encoding.Unicode.GetString(SliceMe(path, 24)).TrimEnd("\0".ToCharArray());
+        }
 
         public static void DirectoryDelete(string sourceDirName, bool DelSubDirs = true)
         {
@@ -230,7 +254,6 @@ namespace Focus
                 }
                 catch
                 {
-                    //Debug.WriteLine("Already");
                 }
 
             }
@@ -264,7 +287,7 @@ namespace Focus
         #endregion
 
         #region separated desktop
-        public void SDesktop(string dir, string wm, string Desktop, bool bdesktop)
+        public async void SDesktop(string dir, string wm, string Desktop, bool bdesktop)
         {
             MKDir(dir);
             if (!Directory.Exists(dir + @"\focus" + wm))
@@ -275,16 +298,7 @@ namespace Focus
             {
                 Directory.CreateDirectory(dir + @"\focus" + wm + @"\Desktop");
             }
-            //Backing up current desktop
-            /*
-            if (!IsDirectoryEmpty(Desktop) && bdesktop)
-            {
-                if (!IsDirectoryEmpty(dir + @"\focus\Desktop"))
-                {
-                    Directory.Delete(dir + @"\focus\Desktop", true);
-                }
-                DirectoryCopy(Desktop, dir + @"\focus\Desktop");
-            }*/
+
             //Backing up current desktop
             if (!IsDirectoryEmpty(Desktop))
             {
@@ -295,6 +309,11 @@ namespace Focus
                         Directory.Delete(dir + @"\focus\Desktop", true);
                     }
                     DirectoryCopy(Desktop, dir + @"\focus\Desktop");
+
+                    //SAVE ICON POSITIONS
+                    registryValues = _registry.GetRegistryValues();
+                    iconPositions = _desktop.GetIconsPositions();
+                    _storage.SaveIconPositions(iconPositions, registryValues, "Default");
                 }
                 else
                 {
@@ -302,20 +321,37 @@ namespace Focus
                     if (CMod == Modes.Night)
                     {
                         n = @"\Night";
-                        if (Properties.Settings.Default.MBackground)
-                            Properties.Settings.Default.MBg = CurrentWallpapperPath();
+                        if (Properties.Settings.Default.MBackground) Properties.Settings.Default.MBg = CurrentWallpapperPath();
+
+                        DesktopRegistry dreg = new DesktopRegistry();
+                        var rval = dreg.GetRegistryValues();
+                        Desktop d = new Desktop();
+                        var ipos = d.GetIconsPositions();
+                        _storage.SaveIconPositions(ipos, rval, "Night");
                     }
                     else if (CMod == Modes.Game)
                     {
                         n = @"\Game";
                         if (Properties.Settings.Default.GBackground)
                             Properties.Settings.Default.GBg = CurrentWallpapperPath();
+
+                        DesktopRegistry dreg = new DesktopRegistry();
+                        var rval = dreg.GetRegistryValues();
+                        Desktop d = new Desktop();
+                        var ipos = d.GetIconsPositions();
+                        _storage.SaveIconPositions(ipos, rval, "Game");
                     }
                     else if (CMod == Modes.Work)
                     {
                         n = @"\Work";
                         if (Properties.Settings.Default.WBackground)
                             Properties.Settings.Default.WBg = CurrentWallpapperPath();
+
+                        DesktopRegistry dreg = new DesktopRegistry();
+                        var rval = dreg.GetRegistryValues();
+                        Desktop d = new Desktop();
+                        var ipos = d.GetIconsPositions();
+                        _storage.SaveIconPositions(ipos, rval, "Work");
                     }
 
                     MKDir(dir);
@@ -341,7 +377,6 @@ namespace Focus
                 }
             }
             //clear desktop
-            //Debug.WriteLine("Clearing the desktop");
             try
             {
                 DirectoryDelete(Desktop);
@@ -350,13 +385,11 @@ namespace Focus
             {
                 MessageBox.Show("Error while clearing desktop!");
             }
-            //Debug.WriteLine("Restoring " + wm + " mode desktop");
             if (!IsDirectoryEmpty(dir + @"\focus" + wm + @"\Desktop"))
             {
                 DirectoryCopy(dir + @"\focus" + wm + @"\Desktop", Desktop, true);
             }
-            //Debug.WriteLine("Toggle Desktop icons!");
-            ToggleDesktopIcons();
+            _desktop.Refresh();
         }
         #endregion
 
@@ -374,11 +407,13 @@ namespace Focus
             else if (mode == Modes.Game)
             {
                 wm = @"\Game";
+
             }
             else if (mode == Modes.Work)
             {
                 wm = @"\Work";
             }
+            #region MODES
             if (mode == Modes.Night)
             {
                 //Separated desktop
@@ -386,6 +421,16 @@ namespace Focus
                 {
                     if(CMod == Modes.Default) SDesktop(dir, wm, Desktop, true);
                     else SDesktop(dir, wm, Desktop, false);
+                    await Task.Delay(250);
+
+                    Storage str = new Storage();
+                    DesktopRegistry dreg = new DesktopRegistry();
+                    Desktop d = new Desktop();
+
+                    var rvals = str.GetRegistryValues("Night");
+                    dreg.SetRegistryValues(rvals);
+                    var ipos = str.GetIconPositions("Night");
+                    d.SetIconPositions(ipos);
                 }
                 #region background
                 if (Properties.Settings.Default.MBackground)
@@ -407,6 +452,19 @@ namespace Focus
                 {
                     if (CMod == Modes.Default) SDesktop(dir, wm, Desktop, true);
                     else SDesktop(dir, wm, Desktop, false);
+                    await Task.Delay(250);
+
+                    
+
+                    Storage str = new Storage();
+                    DesktopRegistry dreg = new DesktopRegistry();
+                    Desktop d = new Desktop();
+
+                    var rvals = str.GetRegistryValues("Game");
+                    Debug.WriteLine(rvals.Count);
+                    dreg.SetRegistryValues(rvals);
+                    var ipos = str.GetIconPositions("Game");
+                    d.SetIconPositions(ipos);
                 }
                 #region background
                 if (Properties.Settings.Default.GBackground)
@@ -427,6 +485,19 @@ namespace Focus
                 {
                     if (CMod == Modes.Default) SDesktop(dir, wm, Desktop, true);
                     else SDesktop(dir, wm, Desktop, false);
+                    await Task.Delay(250);
+                    
+
+                    Storage str = new Storage();
+                    DesktopRegistry dreg = new DesktopRegistry();
+                    Desktop d = new Desktop();
+
+                    var rvals = str.GetRegistryValues("Work");
+                    Debug.WriteLine(rvals.Count);
+                    dreg.SetRegistryValues(rvals);
+                    var ipos = str.GetIconPositions("Work");
+                    d.SetIconPositions(ipos);
+
                 }
                 #region background
                 if (Properties.Settings.Default.WBackground)
@@ -441,6 +512,7 @@ namespace Focus
                 }
                 #endregion
             }
+            #endregion
             else if (mode == Modes.Default)
             {
                 #region BUP DESKTOP
@@ -448,20 +520,48 @@ namespace Focus
                 if (CMod == Modes.Night)
                 {
                     n = @"\Night";
-                    if (Properties.Settings.Default.MBackground)
-                        Properties.Settings.Default.MBg = CurrentWallpapperPath();
+                    if (Properties.Settings.Default.MBackground) Properties.Settings.Default.MBg = CurrentWallpapperPath();
+
+                    if (Properties.Settings.Default.MDesktop)
+                    {
+                        
+                    
+                        DesktopRegistry dreg = new DesktopRegistry();
+                        var rval = dreg.GetRegistryValues();
+                        Desktop d = new Desktop();
+                        var ipos = d.GetIconsPositions();
+                        _storage.SaveIconPositions(ipos, rval, "Night");
+                    }
                 }
                 else if (CMod == Modes.Game)
                 {
                     n = @"\Game";
-                    if (Properties.Settings.Default.GBackground)
-                        Properties.Settings.Default.GBg = CurrentWallpapperPath();
+                    if (Properties.Settings.Default.GBackground) Properties.Settings.Default.GBg = CurrentWallpapperPath();
+
+                    if (Properties.Settings.Default.GDesktop)
+                    {
+                    
+                        DesktopRegistry dreg = new DesktopRegistry();
+                        var rval = dreg.GetRegistryValues();
+                        Desktop d = new Desktop();
+                        var ipos = d.GetIconsPositions();
+                        _storage.SaveIconPositions(ipos, rval, "Game");
+                    }
                 }
                 else if (CMod == Modes.Work)
                 {
                     n = @"\Work";
-                    if (Properties.Settings.Default.WBackground)
-                        Properties.Settings.Default.WBg = CurrentWallpapperPath();
+                    if (Properties.Settings.Default.WBackground) Properties.Settings.Default.WBg = CurrentWallpapperPath();
+
+                    if (Properties.Settings.Default.WDesktop)
+                    {
+                    
+                        Desktop d = new Desktop();
+                        DesktopRegistry dreg = new DesktopRegistry();
+                        var rval = dreg.GetRegistryValues();
+                        var ipos = d.GetIconsPositions();
+                        _storage.SaveIconPositions(ipos, rval, "Work");
+                    }
                 }
 
                 MKDir(dir);
@@ -496,6 +596,11 @@ namespace Focus
                 }
                 if (!IsDirectoryEmpty(dir + @"\focus\Desktop")) DirectoryCopy(dir + @"\focus\Desktop", Desktop, true);
                 if (File.Exists(Properties.Settings.Default.DBg)) SetWallpapper(Properties.Settings.Default.DBg);
+
+                _desktop.Refresh();
+                await Task.Delay(130);
+                restorePos();
+                _desktop.Refresh();
             }
         }
 
@@ -585,102 +690,6 @@ namespace Focus
         {
             Properties.Settings.Default.WBackground = false; SaveP();
         }
-        #endregion
-
-        #region Refresh desktop
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr GetWindow(IntPtr hWnd, GetWindow_Cmd uCmd);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
-
-        enum GetWindow_Cmd : uint
-        {
-            GW_HWNDFIRST = 0,
-            GW_HWNDLAST = 1,
-            GW_HWNDNEXT = 2,
-            GW_HWNDPREV = 3,
-            GW_OWNER = 4,
-            GW_CHILD = 5,
-            GW_ENABLEDPOPUP = 6
-        }
-
-        private const int WM_COMMAND = 0x111;
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
-
-        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern int GetWindowText(IntPtr hWnd, StringBuilder strText, int maxCount);
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern int GetWindowTextLength(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-
-
-        public static string GetWindowText(IntPtr hWnd)
-        {
-            int size = GetWindowTextLength(hWnd);
-            if (size++ > 0)
-            {
-                var builder = new StringBuilder(size);
-                GetWindowText(hWnd, builder, builder.Capacity);
-                return builder.ToString();
-            }
-
-            return String.Empty;
-        }
-
-        public static IEnumerable<IntPtr> FindWindowsWithClass(string className)
-        {
-            IntPtr found = IntPtr.Zero;
-            List<IntPtr> windows = new List<IntPtr>();
-
-            EnumWindows(delegate (IntPtr wnd, IntPtr param)
-            {
-                StringBuilder cl = new StringBuilder(256);
-                GetClassName(wnd, cl, cl.Capacity);
-                if (cl.ToString() == className && (GetWindowText(wnd) == "" || GetWindowText(wnd) == null))
-                {
-                    windows.Add(wnd);
-                }
-                return true;
-            },
-                        IntPtr.Zero);
-
-            return windows;
-        }
-
-        static void ToggleDesktopIcons()
-        {
-            var toggleDesktopCommand = new IntPtr(0x7402);
-            IntPtr hWnd = IntPtr.Zero;
-            if (Environment.OSVersion.Version.Major < 6 || Environment.OSVersion.Version.Minor < 2) //7 and -
-                hWnd = GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD);
-            else
-            {
-                var ptrs = FindWindowsWithClass("WorkerW");
-                int i = 0;
-                while (hWnd == IntPtr.Zero && i < ptrs.Count())
-                {
-                    hWnd = FindWindowEx(ptrs.ElementAt(i), IntPtr.Zero, "SHELLDLL_DefView", null);
-                    i++;
-                }
-            }
-
-
-        }
-
         #endregion
 
         private void SMBFile_MouseDown(object sender, MouseButtonEventArgs e)
