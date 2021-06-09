@@ -1,9 +1,6 @@
 # Focus
 ![gui](https://github.com/kapasifulop/Focus/blob/main/imgs/anim1.gif?raw=true)
-## Usage
-  * Select a mode
-  * When the mode is green change the icons on the desktop
-  * If you want change the background image
+[How to use](https://github.com/kapasifulop/Focus/wiki/Usage)
 ## Images
 ### Main gui
 ![gui](https://github.com/kapasifulop/Focus/blob/main/imgs/1.png?raw=true)
