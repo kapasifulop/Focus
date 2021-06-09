@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +55,8 @@ namespace Focus
                 Storyboard sb = Working.FindResource("Activate") as Storyboard;
                 sb.Stop();
             }
+
+            ChangeMode(Modes.Default);
         }
 
         private void Night_MouseDown(object sender, MouseButtonEventArgs e)
@@ -116,10 +119,173 @@ namespace Focus
             }
         }
 
+        #region functions
+
+        public static void DirectoryDelete(string sourceDirName, bool DelSubDirs = true)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files) file.Delete();
+            if (DelSubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    Directory.Delete(subdir.FullName, true);
+                }
+            }
+        }
+
+        public void MKDir(string mdir)
+        {
+            if (!Directory.Exists(mdir + @"\focus"))
+            {
+                Directory.CreateDirectory(mdir + @"\focus");
+            }
+        }
+
+        public bool IsDirectoryEmpty(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                return true;
+            }
+            return !Directory.EnumerateFileSystemEntries(path).Any();
+        }
+
+        public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // If the destination directory doesn't exist, create it.       
+            Directory.CreateDirectory(destDirName);
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = System.IO.Path.Combine(destDirName, file.Name);
+                try
+                {
+                    file.CopyTo(tempPath, false);
+                }
+                catch
+                {
+                    //Debug.WriteLine("Already");
+                }
+
+            }
+
+            // If copying subdirectories, copy them and their contents to new location.
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string tempPath = System.IO.Path.Combine(destDirName, subdir.Name);
+                    DirectoryCopy(subdir.FullName, tempPath, copySubDirs);
+                }
+            }
+        }
+        #endregion
+
         public void ChangeMode(int mode)
         {
             String dir = Properties.Settings.Default.SaveFolder;
+            String Desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             Debug.WriteLine(dir);
+            if(mode == Modes.Night)
+            {
+                //Separated desktop
+                if (Properties.Settings.Default.MDesktop)
+                {
+                    MKDir(dir);
+                    if(!Directory.Exists(dir + @"\focus\Night"))
+                    {
+                        Directory.CreateDirectory(dir + @"\focus\Night");
+                    }
+                    if(!Directory.Exists(dir + @"\focus\Night\Desktop"))
+                    {
+                        Directory.CreateDirectory(dir + @"\focus\Night\Desktop");
+                    }
+                    //Backing up current desktop
+                    if (!IsDirectoryEmpty(Desktop))
+                    {
+                        if (!IsDirectoryEmpty(dir + @"\focus\Desktop"))
+                        {
+                            Directory.Delete(dir + @"\focus\Desktop", true);
+                        }
+                        DirectoryCopy(Desktop, dir + @"\focus\Desktop");
+                    }
+                    //clear desktop
+                    Debug.WriteLine("Clearing the desktop");
+                    try
+                    {
+                        DirectoryDelete(Desktop);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error while clearing desktop!");
+                    }
+                    Debug.WriteLine("Restoring night mode desktop");
+                    if (!IsDirectoryEmpty(dir + @"\focus\Night\Desktop")){
+                        DirectoryCopy(dir + @"\focus\Night\Desktop", Desktop, true);
+                    }
+                }
+            }else if(mode == Modes.Default)
+            {
+                //BACKUP DESKTOP
+                if (CMod == Modes.Night)
+                {
+                    MKDir(dir);
+                    if (!Directory.Exists(dir + @"\focus\Night"))
+                    {
+                        Directory.CreateDirectory(dir + @"\focus\Night");
+                    }
+                    if (!Directory.Exists(dir + @"\focus\Night\Desktop"))
+                    {
+                        Directory.CreateDirectory(dir + @"\focus\Night\Desktop");
+                    }
+                    //BACKUP
+                    if (!IsDirectoryEmpty(Desktop))
+                    {
+                        if (!IsDirectoryEmpty(dir + @"\focus\Night\Desktop\"))
+                        {
+                            Directory.Delete(dir + @"\focus\Night\Desktop", true);
+                        }
+                        DirectoryCopy(Desktop, dir + @"\focus\Night\Desktop");
+                    }
+
+                }
+                //Clear desktop
+                try
+                {
+                    DirectoryDelete(Desktop);
+                }
+                catch
+                {
+                    MessageBox.Show("Error while clearing desktop!");
+                }
+                if (!IsDirectoryEmpty(dir + @"\focus\Desktop")) DirectoryCopy(dir + @"\focus\Desktop", Desktop, true);
+            }
         }
 
 
@@ -141,6 +307,49 @@ namespace Focus
             sb.Begin();
             await Task.Delay(6);
             SettingsV.Visibility = Visibility.Collapsed;
+        }
+
+
+
+        public void SaveP()
+        {
+            Properties.Settings.Default.Save();
+        }
+        //CBoxes
+        private void MMCbox_Checked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.MDesktop = true;
+            SaveP();
+        }
+
+        private void MMCbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.MDesktop = false;
+            SaveP();
+        }
+
+        private void GMCbox_Checked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.GDesktop = true;
+            SaveP();
+        }
+
+        private void GMCbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.GDesktop = false;
+            SaveP();
+        }
+
+        private void WMCbox_Checked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.WDesktop = true;
+            SaveP();
+        }
+
+        private void WMCbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.WDesktop = false;
+            SaveP();
         }
     }
 }

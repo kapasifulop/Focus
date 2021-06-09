@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p="clr-namespace:Focus.Properties"
         xmlns:local="clr-namespace:Focus"
         mc:Ignorable="d"
-        Title="Focus" WindowStyle="None" MaxHeight="200" MaxWidth="200" AllowsTransparency="True" Background="Transparent" Height="2000" Width="2000" x:Name="MWindow">
+        Title="Focus" WindowStyle="None" MaxHeight="200" MaxWidth="200" AllowsTransparency="True" Background="Transparent" Height="2000" Width="2000" x:Name="MWindow" RenderOptions.BitmapScalingMode="HighQuality">
     <Window.Resources>
         <Storyboard x:Key="ResizeB">
             <DoubleAnimation
@@ -116,28 +117,211 @@
             <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
             <Setter Property="Image.Margin" Value="10"/>
         </Style>
+        <Style x:Key="DGrid" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="#f5f6fa"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#dcdde1" Duration="0:0:0.01" Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#f5f6fa" Duration="0:0:0.5" Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DUSGrid" TargetType="{x:Type Grid}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=DesktopSettingsG, Path=IsMouseOver}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation From="0" To="200" Storyboard.TargetProperty="Height" Duration="0:0:0.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation From="200" To="0" Storyboard.TargetProperty="Height" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="OptionMarkFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="14,0,0,0" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="#FFF3F9FF"/>
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="#FF5593FF"/>
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Background" Color="#FFD9ECFF"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Border" Color="#FF3C77DD"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Background" Color="#FFE6E6E6"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Border" Color="#FFBCBCBC"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="#FF707070"/>
+        <Style x:Key="SettingsCboxes" TargetType="{x:Type CheckBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource OptionMark.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="checkBoxBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid x:Name="markGrid" VerticalAlignment="Center">
+                                    <Path x:Name="optionMark" Data="F1 M 9.97498,1.22334L 4.6983,9.09834L 4.52164,9.09834L 0,5.19331L 1.27664,3.52165L 4.255,6.08833L 8.33331,1.52588e-005L 9.97498,1.22334 Z " Fill="{StaticResource OptionMark.Static.Glyph}" Margin="4" Opacity="0" Stretch="None"/>
+                                    <Rectangle x:Name="indeterminateMark" Fill="{StaticResource OptionMark.Static.Glyph}" Margin="8" Opacity="0"/>
+                                </Grid>
+                            </Border>
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasContent" Value="true">
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource OptionMarkFocusVisual}"/>
+                                <Setter Property="Padding" Value="4,-1,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="#3498db"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource OptionMark.MouseOver.Glyph}"/>
+                                <Setter Property="Fill" TargetName="indeterminateMark" Value="{StaticResource OptionMark.MouseOver.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.Disabled.Border}"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource OptionMark.Disabled.Glyph}"/>
+                                <Setter Property="Fill" TargetName="indeterminateMark" Value="{StaticResource OptionMark.Disabled.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="#2980b9"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource OptionMark.Pressed.Glyph}"/>
+                                <Setter Property="Fill" TargetName="indeterminateMark" Value="{StaticResource OptionMark.Pressed.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+                                <Setter Property="Opacity" TargetName="indeterminateMark" Value="0"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter Property="Opacity" TargetName="optionMark" Value="0"/>
+                                <Setter Property="Opacity" TargetName="indeterminateMark" Value="1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Border CornerRadius="30" Background="White"/>
         <Border Background="#bdc3c7" Margin="50,7.5,50,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="6" CornerRadius="2" MouseDown="Top_MouseDown"/>
-        <ScrollViewer x:Name="SettingsV" Margin="15" Visibility="Hidden">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Image Source="images\back.png" VerticalAlignment="Stretch" HorizontalAlignment="Left" MouseDown="Back_Click"/>
-                
-                <Grid Grid.Row="1">
+        
+        <Grid x:Name="SettingsV" Margin="15" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Image Source="images\back.png" VerticalAlignment="Stretch" HorizontalAlignment="Left" MouseDown="Back_Click" Margin="10"/>
+            <ScrollViewer Grid.Row="1">
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
+                        <RowDefinition />
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
+                    <Grid Style="{DynamicResource DGrid}" x:Name="DesktopSettingsG">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <Grid Height="80" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="images/desktop.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10" VerticalAlignment="Center"/>
+                            <TextBlock Text="Separated desktop" Grid.Column="1" FontFamily="arial" FontSize="25" VerticalAlignment="Center" Margin="10"/>
+                        </Grid>
+
+                        <Grid Style="{DynamicResource DUSGrid}" x:Name="DesktopSettingsUG" Margin="20,0,0,0" Background="#dcdde1" Grid.Row="1" Height="250">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="images/moon.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <CheckBox x:Name="MMCbox" Checked="MMCbox_Checked" Unchecked="MMCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=MDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop for night mode: " FontSize="20" FontFamily="arial"/>
+                                </CheckBox>
+                            </Grid>
+                            <Grid Grid.Row="1" Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="images/game.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <CheckBox x:Name="GMCbox" Checked="GMCbox_Checked" Unchecked="GMCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=GDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop for game mode: " FontSize="20" FontFamily="arial"/>
+                                </CheckBox>
+                            </Grid>
+                            <Grid Grid.Row="2" Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="images/work.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <CheckBox x:Name="WMCbox" Checked="WMCbox_Checked" Unchecked="WMCbox_Unchecked"  Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=WDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop for work mode: " FontSize="20" FontFamily="arial"/>
+                                </CheckBox>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
                 </Grid>
-            </Grid>
-        </ScrollViewer>
+            </ScrollViewer>
+        </Grid>
         <Grid Margin="15" x:Name="OGrid" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -186,7 +370,7 @@
                     <Image Style="{DynamicResource IStyle}" Source="images/work.png"/>
                 </Grid>
             </Border>
-            
+
             <Border x:Name="Settings" MouseDown="Settings_MouseDown" Style="{DynamicResource BStyle}" CornerRadius="20" Grid.Row="1" Grid.Column="1">
                 <Border.Resources>
                     <Storyboard x:Key="Activate" Storyboard.TargetName="Night">
@@ -199,8 +383,6 @@
                     <Image Style="{DynamicResource IStyle}" Source="images\settings.png"/>
                 </Grid>
             </Border>
-            
-            
         </Grid>
     </Grid>
 </Window>

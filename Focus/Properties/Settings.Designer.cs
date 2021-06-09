@@ -38,12 +38,12 @@ namespace Focus.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool NDesktop {
+        public bool MDesktop {
             get {
-                return ((bool)(this["NDesktop"]));
+                return ((bool)(this["MDesktop"]));
             }
             set {
-                this["NDesktop"] = value;
+                this["MDesktop"] = value;
             }
         }
         

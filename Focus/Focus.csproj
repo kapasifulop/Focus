@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="images\back.png" />
+    <None Remove="images\desktop.png" />
     <None Remove="images\game.png" />
     <None Remove="images\moon.png" />
     <None Remove="images\moon_fill.png" />
@@ -17,6 +18,7 @@
 
   <ItemGroup>
     <Resource Include="images\back.png" />
+    <Resource Include="images\desktop.png" />
     <Resource Include="images\game.png" />
     <Resource Include="images\moon.png" />
     <Resource Include="images\moon_fill.png" />

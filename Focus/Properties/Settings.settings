@@ -5,7 +5,7 @@
     <Setting Name="SaveFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="NDesktop" Type="System.Boolean" Scope="User">
+    <Setting Name="MDesktop" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="GDesktop" Type="System.Boolean" Scope="User">

@@ -5,11 +5,12 @@ D:\projects\focus\Focus\Focus\bin\Debug\net5.0-windows\Focus.runtimeconfig.dev.j
 D:\projects\focus\Focus\Focus\bin\Debug\net5.0-windows\Focus.dll
 D:\projects\focus\Focus\Focus\bin\Debug\net5.0-windows\ref\Focus.dll
 D:\projects\focus\Focus\Focus\bin\Debug\net5.0-windows\Focus.pdb
-D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus.csproj.AssemblyReference.cache
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\MainWindow.g.cs
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\App.g.cs
+D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\GeneratedInternalTypeHelper.g.cs
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus_MarkupCompile.cache
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus_MarkupCompile.lref
+D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\App.baml
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\MainWindow.baml
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus.g.resources
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus.GeneratedMSBuildEditorConfig.editorconfig
@@ -20,5 +21,4 @@ D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus.dll
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\ref\Focus.dll
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus.pdb
 D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus.genruntimeconfig.cache
-D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\GeneratedInternalTypeHelper.g.cs
-D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\App.baml
+D:\projects\focus\Focus\Focus\obj\Debug\net5.0-windows\Focus.csproj.AssemblyReference.cache
