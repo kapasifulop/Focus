@@ -92,7 +92,11 @@ namespace Focus
                 Storyboard sb = Working.FindResource("Activate") as Storyboard;
                 sb.Stop();
             }
-            if(WMod == 5) ChangeMode(Modes.Default);
+            if (WMod == 5)
+            {
+                Debug.Write("CMOD");
+                ChangeMode(Modes.Default);
+            }
         }
 
         private async void Night_MouseDown(object sender, MouseButtonEventArgs e)
@@ -272,6 +276,7 @@ namespace Focus
                 Directory.CreateDirectory(dir + @"\focus" + wm + @"\Desktop");
             }
             //Backing up current desktop
+            /*
             if (!IsDirectoryEmpty(Desktop) && bdesktop)
             {
                 if (!IsDirectoryEmpty(dir + @"\focus\Desktop"))
@@ -279,6 +284,61 @@ namespace Focus
                     Directory.Delete(dir + @"\focus\Desktop", true);
                 }
                 DirectoryCopy(Desktop, dir + @"\focus\Desktop");
+            }*/
+            //Backing up current desktop
+            if (!IsDirectoryEmpty(Desktop))
+            {
+                if(CMod == Modes.Default)
+                {
+                    if (!IsDirectoryEmpty(dir + @"\focus\Desktop"))
+                    {
+                        Directory.Delete(dir + @"\focus\Desktop", true);
+                    }
+                    DirectoryCopy(Desktop, dir + @"\focus\Desktop");
+                }
+                else
+                {
+                    string n = "";
+                    if (CMod == Modes.Night)
+                    {
+                        n = @"\Night";
+                        if (Properties.Settings.Default.MBackground)
+                            Properties.Settings.Default.MBg = CurrentWallpapperPath();
+                    }
+                    else if (CMod == Modes.Game)
+                    {
+                        n = @"\Game";
+                        if (Properties.Settings.Default.GBackground)
+                            Properties.Settings.Default.GBg = CurrentWallpapperPath();
+                    }
+                    else if (CMod == Modes.Work)
+                    {
+                        n = @"\Work";
+                        if (Properties.Settings.Default.WBackground)
+                            Properties.Settings.Default.WBg = CurrentWallpapperPath();
+                    }
+
+                    MKDir(dir);
+                    if (!Directory.Exists(dir + @"\focus" + n))
+                    {
+                        Directory.CreateDirectory(dir + @"\focus" + n);
+                    }
+                    if (!Directory.Exists(dir + @"\focus" + n + @"\Desktop"))
+                    {
+                        Directory.CreateDirectory(dir + @"\focus" + n + @"\Desktop");
+                    }
+                    //BACKUP
+                    if (!IsDirectoryEmpty(Desktop))
+                    {
+                        if (!IsDirectoryEmpty(dir + @"\focus" + n + @"\Desktop"))
+                        {
+                            Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
+                        }
+                        DirectoryCopy(Desktop, dir + @"\focus" + n + @"\Desktop");
+                        Debug.WriteLine(Desktop + " - " + dir + @"\focus" + n + @"\Desktop");
+                    }
+                    else Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
+                }
             }
             //clear desktop
             //Debug.WriteLine("Clearing the desktop");
@@ -421,6 +481,7 @@ namespace Focus
                         Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
                     }
                     DirectoryCopy(Desktop, dir + @"\focus" + n + @"\Desktop");
+                    Debug.WriteLine(Desktop + " - " + dir + @"\focus" + n + @"\Desktop");
                 }
                 else Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
                 #endregion
