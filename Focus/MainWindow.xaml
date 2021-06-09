@@ -144,14 +144,34 @@
                     <DataTrigger.EnterActions>
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation From="0" To="200" Storyboard.TargetProperty="Height" Duration="0:0:0.5"/>
+                                <DoubleAnimation To="200" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
                             </Storyboard>
                         </BeginStoryboard>
                     </DataTrigger.EnterActions>
                     <DataTrigger.ExitActions>
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation From="200" To="0" Storyboard.TargetProperty="Height" Duration="0:0:0.2"/>
+                                <DoubleAnimation From="200" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="BUSGrid" TargetType="{x:Type Grid}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=DesktopSettingsB, Path=IsMouseOver}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation To="200" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation To="0" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
                             </Storyboard>
                         </BeginStoryboard>
                     </DataTrigger.ExitActions>
@@ -203,7 +223,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Border x:Name="checkBoxBorder" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <Grid x:Name="markGrid" VerticalAlignment="Center">
+                                <Grid x:Name="markGrid" VerticalAlignment="Center" FlowDirection="LeftToRight">
                                     <Path x:Name="optionMark" Data="F1 M 9.97498,1.22334L 4.6983,9.09834L 4.52164,9.09834L 0,5.19331L 1.27664,3.52165L 4.255,6.08833L 8.33331,1.52588e-005L 9.97498,1.22334 Z " Fill="{StaticResource OptionMark.Static.Glyph}" Margin="4" Opacity="0" Stretch="None"/>
                                     <Rectangle x:Name="indeterminateMark" Fill="{StaticResource OptionMark.Static.Glyph}" Margin="8" Opacity="0"/>
                                 </Grid>
@@ -257,14 +277,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Image Source="images\back.png" VerticalAlignment="Stretch" HorizontalAlignment="Left" MouseDown="Back_Click" Margin="10"/>
-            <ScrollViewer Grid.Row="1">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="1" Focusable="False">
+                <StackPanel Orientation="Vertical" Focusable="False">
                     <Grid Style="{DynamicResource DGrid}" x:Name="DesktopSettingsG">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="80"/>
@@ -277,10 +291,10 @@
                                 <ColumnDefinition Width="5*"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="images/desktop.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10" VerticalAlignment="Center"/>
-                            <TextBlock Text="Separated desktop" Grid.Column="1" FontFamily="arial" FontSize="25" VerticalAlignment="Center" Margin="10"/>
+                            <TextBlock Text="Separated desktop icons" Grid.Column="1" FontFamily="arial" FontSize="25" VerticalAlignment="Center" Margin="10"/>
                         </Grid>
 
-                        <Grid Style="{DynamicResource DUSGrid}" x:Name="DesktopSettingsUG" Margin="20,0,0,0" Background="#dcdde1" Grid.Row="1" Height="250">
+                        <Grid Style="{DynamicResource DUSGrid}" x:Name="DesktopSettingsUG" Margin="20,0,0,0" Background="#dcdde1" Grid.Row="1" Height="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
@@ -293,7 +307,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/moon.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="MMCbox" Checked="MMCbox_Checked" Unchecked="MMCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=MDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop for night mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons for night mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                             </Grid>
                             <Grid Grid.Row="1" Margin="10">
@@ -303,7 +317,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/game.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="GMCbox" Checked="GMCbox_Checked" Unchecked="GMCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=GDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop for game mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons for game mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                             </Grid>
                             <Grid Grid.Row="2" Margin="10">
@@ -313,13 +327,83 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/work.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="WMCbox" Checked="WMCbox_Checked" Unchecked="WMCbox_Unchecked"  Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=WDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop for work mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons for work mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                             </Grid>
                         </Grid>
                     </Grid>
 
-                </Grid>
+                    <Grid Style="{DynamicResource DGrid}" x:Name="DesktopSettingsB">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <Grid Height="80" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="images/background.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10" VerticalAlignment="Center"/>
+                            <TextBlock Text="Separated background images" Grid.Column="1" FontFamily="arial" FontSize="25" VerticalAlignment="Center" Margin="10"/>
+                        </Grid>
+
+
+                        <Grid Style="{DynamicResource BUSGrid}" x:Name="BakcgroundSettingsUG" Margin="20,0,0,0" Background="#dcdde1" Grid.Row="1" Height="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="images/moon.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <CheckBox x:Name="MBCbox" Checked="MBCbox_Checked" Unchecked="MBCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=MBackground}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images for night mode: " FontSize="20" FontFamily="arial"/>
+                                </CheckBox>
+                                <TextBlock Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="10" Text="{Binding Source={x:Static p:Settings.Default}, Path=MBg}"/>
+                                <Border x:Name="SMBFile" MouseDown="SMBFile_MouseDown" Background="#dcdde1" Margin="10" Grid.Column="2" HorizontalAlignment="Left">
+                                    <Image Source="images/loupe.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Border>
+                            </Grid>
+                            <Grid Grid.Row="1" Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="images/game.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <CheckBox x:Name="GBCbox" Checked="GBCbox_Checked" Unchecked="GBCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=GBackground}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images for game mode: " FontSize="20" FontFamily="arial"/>
+                                </CheckBox>
+                                <TextBlock Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="10" Text="{Binding Source={x:Static p:Settings.Default}, Path=GBg}"/>
+                                <Border x:Name="SGBFile" MouseDown="SGBFile_MouseDown" Background="#dcdde1" Margin="10" Grid.Column="2" HorizontalAlignment="Left">
+                                    <Image Source="images/loupe.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Border>
+                                
+                            </Grid>
+                            <Grid Grid.Row="2" Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="images/work.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <CheckBox x:Name="WBbox" Checked="WBbox_Checked" Unchecked="WBbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=WBackground}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images for work mode: " FontSize="20" FontFamily="arial"/>
+                                </CheckBox>
+                                <TextBlock Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="10" Text="{Binding Source={x:Static p:Settings.Default}, Path=WBg}"/>
+                                <Border x:Name="SWBFile" MouseDown="SWBFile_MouseDown" Background="#dcdde1" Margin="10" Grid.Column="2" HorizontalAlignment="Left">
+                                    <Image Source="images/loupe.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
             </ScrollViewer>
         </Grid>
         <Grid Margin="15" x:Name="OGrid" Visibility="Visible">

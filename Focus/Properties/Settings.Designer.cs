@@ -70,5 +70,89 @@ namespace Focus.Properties {
                 this["WDesktop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MBackground {
+            get {
+                return ((bool)(this["MBackground"]));
+            }
+            set {
+                this["MBackground"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GBackground {
+            get {
+                return ((bool)(this["GBackground"]));
+            }
+            set {
+                this["GBackground"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool WBackground {
+            get {
+                return ((bool)(this["WBackground"]));
+            }
+            set {
+                this["WBackground"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MBg {
+            get {
+                return ((string)(this["MBg"]));
+            }
+            set {
+                this["MBg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GBg {
+            get {
+                return ((string)(this["GBg"]));
+            }
+            set {
+                this["GBg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WBg {
+            get {
+                return ((string)(this["WBg"]));
+            }
+            set {
+                this["WBg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DBg {
+            get {
+                return ((string)(this["DBg"]));
+            }
+            set {
+                this["DBg"] = value;
+            }
+        }
     }
 }

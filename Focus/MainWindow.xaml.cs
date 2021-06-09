@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,16 +29,50 @@ namespace Focus
         public MainWindow()
         {
             InitializeComponent();
-            if(Properties.Settings.Default.SaveFolder.Trim() == "")
+            if (Properties.Settings.Default.SaveFolder.Trim() == "")
             {
                 Properties.Settings.Default.SaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 Properties.Settings.Default.Save();
             }
+            if(Properties.Settings.Default.MBg.Trim() == "" || !File.Exists(Properties.Settings.Default.MBg))
+            {
+                Properties.Settings.Default.MBg = CurrentWallpapperPath();
+                Properties.Settings.Default.Save();
+            }
+            if (Properties.Settings.Default.GBg.Trim() == "" || !File.Exists(Properties.Settings.Default.GBg))
+            {
+                Properties.Settings.Default.GBg = CurrentWallpapperPath();
+                Properties.Settings.Default.Save();
+            }
+            if (Properties.Settings.Default.WBg.Trim() == "" || !File.Exists(Properties.Settings.Default.WBg))
+            {
+                Properties.Settings.Default.WBg = CurrentWallpapperPath();
+                Properties.Settings.Default.Save();
+            }
+
+            if(Properties.Settings.Default.DBg.Trim() == "" || !File.Exists(Properties.Settings.Default.DBg))
+            {
+                Properties.Settings.Default.DBg = CurrentWallpapperPath();
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        static byte[] SliceMe(byte[] source, int pos)
+        {
+            byte[] destfoo = new byte[source.Length - pos];
+            Array.Copy(source, pos, destfoo, 0, destfoo.Length);
+            return destfoo;
+        }
+
+        public static string CurrentWallpapperPath()
+        {
+            byte[] path = (byte[])Registry.CurrentUser.OpenSubKey("Control Panel\\Desktop").GetValue("TranscodedImageCache");
+            return Encoding.Unicode.GetString(SliceMe(path, 24)).TrimEnd("\0".ToCharArray());
         }
 
         private void Top_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ChangedButton == MouseButton.Left) this.DragMove();
+            if (e.ChangedButton == MouseButton.Left) this.DragMove();
         }
 
         public async void TurnOff(int WMod = 5)
@@ -45,7 +81,8 @@ namespace Focus
             {
                 Storyboard sb = Night.FindResource("Activate") as Storyboard;
                 sb.Stop();
-            }else if(CMod == Modes.Game && WMod != Modes.Game)
+            }
+            else if (CMod == Modes.Game && WMod != Modes.Game)
             {
                 Storyboard sb = Gaming.FindResource("Activate") as Storyboard;
                 sb.Stop();
@@ -55,15 +92,14 @@ namespace Focus
                 Storyboard sb = Working.FindResource("Activate") as Storyboard;
                 sb.Stop();
             }
-
-            ChangeMode(Modes.Default);
+            if(WMod == 5) ChangeMode(Modes.Default);
         }
 
         private void Night_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left)
             {
-                if(CMod == Modes.Night)
+                if (CMod == Modes.Night)
                 {
                     TurnOff();
                     CMod = Modes.Default;
@@ -205,7 +241,24 @@ namespace Focus
                 }
             }
         }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern Int32 SystemParametersInfo(
+        UInt32 action, UInt32 uParam, String vParam, UInt32 winIni);
+
+        private static readonly UInt32 SPI_SETDESKWALLPAPER = 0x14;
+        private static readonly UInt32 SPIF_UPDATEINIFILE = 0x01;
+        private static readonly UInt32 SPIF_SENDWININICHANGE = 0x02;
+
+        public static void SetWallpapper(string path)
+        {
+            if (File.Exists(path))
+                SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, path, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+            else Debug.WriteLine("WALLPAPPER FILE NOT FOUND!!");
+        }
+
         #endregion
+
         #region separated desktop
         public void SDesktop(string dir, string wm, string Desktop)
         {
@@ -228,7 +281,7 @@ namespace Focus
                 DirectoryCopy(Desktop, dir + @"\focus\Desktop");
             }
             //clear desktop
-            Debug.WriteLine("Clearing the desktop");
+            //Debug.WriteLine("Clearing the desktop");
             try
             {
                 DirectoryDelete(Desktop);
@@ -237,18 +290,21 @@ namespace Focus
             {
                 MessageBox.Show("Error while clearing desktop!");
             }
-            Debug.WriteLine("Restoring " + wm + " mode desktop");
+            //Debug.WriteLine("Restoring " + wm + " mode desktop");
             if (!IsDirectoryEmpty(dir + @"\focus" + wm + @"\Desktop"))
             {
                 DirectoryCopy(dir + @"\focus" + wm + @"\Desktop", Desktop, true);
             }
+            //Debug.WriteLine("Toggle Desktop icons!");
+            ToggleDesktopIcons();
         }
         #endregion
+
         public async void ChangeMode(int mode)
         {
             String dir = Properties.Settings.Default.SaveFolder;
             String Desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            Debug.WriteLine(dir);
+            //Debug.WriteLine(dir);
             String wm = "";
             if (CMod == Modes.Night)
             {
@@ -270,15 +326,30 @@ namespace Focus
                     SDesktop(dir, wm, Desktop);
                 }
                 #region background
+                if (Properties.Settings.Default.MBackground)
+                {
+                    Properties.Settings.Default.DBg = CurrentWallpapperPath();
+                    Properties.Settings.Default.Save();
+                    if (File.Exists(Properties.Settings.Default.MBg)) SetWallpapper(Properties.Settings.Default.MBg);
+                    else MessageBox.Show("Background file not found! Set the file in the settings!");
+                }
                 #endregion
 
-            }else if(mode == Modes.Game)
+            }
+            else if (mode == Modes.Game)
             {
                 if (Properties.Settings.Default.GDesktop)
                 {
                     SDesktop(dir, wm, Desktop);
                 }
                 #region background
+                if (Properties.Settings.Default.GBackground)
+                {
+                    Properties.Settings.Default.DBg = CurrentWallpapperPath();
+                    Properties.Settings.Default.Save();
+                    if(File.Exists(Properties.Settings.Default.GBg)) SetWallpapper(Properties.Settings.Default.GBg);
+                    else MessageBox.Show("Background file not found! Set the file in the settings!");
+                }
                 #endregion
             }
             else if (mode == Modes.Work)
@@ -288,22 +359,36 @@ namespace Focus
                     SDesktop(dir, wm, Desktop);
                 }
                 #region background
+                if (Properties.Settings.Default.WBackground)
+                {
+                    Properties.Settings.Default.DBg = CurrentWallpapperPath();
+                    Properties.Settings.Default.Save();
+                    if (File.Exists(Properties.Settings.Default.WBg)) SetWallpapper(Properties.Settings.Default.WBg);
+                    else MessageBox.Show("Background file not found! Set the file in the settings!");
+                }
                 #endregion
             }
-            else if(mode == Modes.Default)
+            else if (mode == Modes.Default)
             {
                 #region BUP DESKTOP
                 String n = "";
                 if (CMod == Modes.Night)
                 {
                     n = @"\Night";
-                }else if(CMod == Modes.Game)
+                    if (Properties.Settings.Default.MBackground)
+                        Properties.Settings.Default.MBg = CurrentWallpapperPath();
+                }
+                else if (CMod == Modes.Game)
                 {
                     n = @"\Game";
+                    if (Properties.Settings.Default.GBackground)
+                        Properties.Settings.Default.GBg = CurrentWallpapperPath();
                 }
-                else if(CMod == Modes.Work)
+                else if (CMod == Modes.Work)
                 {
                     n = @"\Work";
+                    if (Properties.Settings.Default.WBackground)
+                        Properties.Settings.Default.WBg = CurrentWallpapperPath();
                 }
 
                 MKDir(dir);
@@ -323,7 +408,8 @@ namespace Focus
                         Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
                     }
                     DirectoryCopy(Desktop, dir + @"\focus" + n + @"\Desktop");
-                }else Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
+                }
+                else Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
                 #endregion
                 //Clear desktop
                 try
@@ -335,6 +421,7 @@ namespace Focus
                     MessageBox.Show("Error while clearing desktop!");
                 }
                 if (!IsDirectoryEmpty(dir + @"\focus\Desktop")) DirectoryCopy(dir + @"\focus\Desktop", Desktop, true);
+                if (File.Exists(Properties.Settings.Default.DBg)) SetWallpapper(Properties.Settings.Default.DBg);
             }
         }
 
@@ -359,47 +446,215 @@ namespace Focus
             SettingsV.Visibility = Visibility.Collapsed;
         }
 
-
-
         public void SaveP()
         {
             Properties.Settings.Default.Save();
         }
-        //CBoxes
+
+        #region Checkboxes
         private void MMCbox_Checked(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.MDesktop = true;
-            SaveP();
+            Properties.Settings.Default.MDesktop = true; SaveP();
         }
 
         private void MMCbox_Unchecked(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.MDesktop = false;
-            SaveP();
+            Properties.Settings.Default.MDesktop = false; SaveP();
         }
 
         private void GMCbox_Checked(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.GDesktop = true;
-            SaveP();
+            Properties.Settings.Default.GDesktop = true; SaveP();
         }
 
         private void GMCbox_Unchecked(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.GDesktop = false;
-            SaveP();
+            Properties.Settings.Default.GDesktop = false; SaveP();
         }
 
         private void WMCbox_Checked(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.WDesktop = true;
-            SaveP();
+            Properties.Settings.Default.WDesktop = true; SaveP();
         }
 
         private void WMCbox_Unchecked(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.WDesktop = false;
-            SaveP();
+            Properties.Settings.Default.WDesktop = false; SaveP();
+        }
+
+        private void MBCbox_Checked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.MBackground = true; SaveP();
+        }
+
+        private void MBCbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.MBackground = false; SaveP();
+        }
+
+        private void GBCbox_Checked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.GBackground = true; SaveP();
+        }
+
+        private void GBCbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.GBackground = false; SaveP();
+        }
+
+        private void WBbox_Checked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.WBackground = true; SaveP();
+        }
+
+        private void WBbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.WBackground = false; SaveP();
+        }
+        #endregion
+
+        #region Refresh desktop
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr GetWindow(IntPtr hWnd, GetWindow_Cmd uCmd);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+
+        enum GetWindow_Cmd : uint
+        {
+            GW_HWNDFIRST = 0,
+            GW_HWNDLAST = 1,
+            GW_HWNDNEXT = 2,
+            GW_HWNDPREV = 3,
+            GW_OWNER = 4,
+            GW_CHILD = 5,
+            GW_ENABLEDPOPUP = 6
+        }
+
+        private const int WM_COMMAND = 0x111;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+
+        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder strText, int maxCount);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+
+        public static string GetWindowText(IntPtr hWnd)
+        {
+            int size = GetWindowTextLength(hWnd);
+            if (size++ > 0)
+            {
+                var builder = new StringBuilder(size);
+                GetWindowText(hWnd, builder, builder.Capacity);
+                return builder.ToString();
+            }
+
+            return String.Empty;
+        }
+
+        public static IEnumerable<IntPtr> FindWindowsWithClass(string className)
+        {
+            IntPtr found = IntPtr.Zero;
+            List<IntPtr> windows = new List<IntPtr>();
+
+            EnumWindows(delegate (IntPtr wnd, IntPtr param)
+            {
+                StringBuilder cl = new StringBuilder(256);
+                GetClassName(wnd, cl, cl.Capacity);
+                if (cl.ToString() == className && (GetWindowText(wnd) == "" || GetWindowText(wnd) == null))
+                {
+                    windows.Add(wnd);
+                }
+                return true;
+            },
+                        IntPtr.Zero);
+
+            return windows;
+        }
+
+        static void ToggleDesktopIcons()
+        {
+            var toggleDesktopCommand = new IntPtr(0x7402);
+            IntPtr hWnd = IntPtr.Zero;
+            if (Environment.OSVersion.Version.Major < 6 || Environment.OSVersion.Version.Minor < 2) //7 and -
+                hWnd = GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD);
+            else
+            {
+                var ptrs = FindWindowsWithClass("WorkerW");
+                int i = 0;
+                while (hWnd == IntPtr.Zero && i < ptrs.Count())
+                {
+                    hWnd = FindWindowEx(ptrs.ElementAt(i), IntPtr.Zero, "SHELLDLL_DefView", null);
+                    i++;
+                }
+            }
+
+
+        }
+
+        #endregion
+
+        private void SMBFile_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OpenFileDialog of = new OpenFileDialog();
+            of.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
+            of.Title = "Select night mode background image";
+
+            of.ShowDialog();
+            if (!String.IsNullOrEmpty(of.FileName))
+            {
+                Properties.Settings.Default.MBg = of.FileName;
+                SaveP();
+                Debug.WriteLine(of.FileName.ToString());
+            }
+            else Debug.WriteLine("No file // cancel");
+        }
+
+        private void SGBFile_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OpenFileDialog of = new OpenFileDialog();
+            of.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
+            of.Title = "Select game mode background image";
+
+            of.ShowDialog();
+            if (!String.IsNullOrEmpty(of.FileName))
+            {
+                Properties.Settings.Default.GBg = of.FileName;
+                SaveP();
+                Debug.WriteLine(of.FileName.ToString());
+            }
+            else Debug.WriteLine("No file // cancel");
+        }
+
+        private void SWBFile_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OpenFileDialog of = new OpenFileDialog();
+            of.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
+            of.Title = "Select work mode background image";
+
+            of.ShowDialog();
+            if (!String.IsNullOrEmpty(of.FileName))
+            {
+                Properties.Settings.Default.WBg = of.FileName;
+                SaveP();
+                Debug.WriteLine(of.FileName.ToString());
+            }
+            else Debug.WriteLine("No file // cancel");
         }
     }
 }
