@@ -1,6 +1,6 @@
 # Focus
 ![gui](https://github.com/kapasifulop/Focus/blob/main/imgs/anim1.gif?raw=true)  
-[How to use](https://github.com/kapasifulop/Focus/wiki/Usage)
+## [How to use](https://github.com/kapasifulop/Focus/wiki/Usage)
 ## Images
 ### Main gui
 <img src="https://github.com/kapasifulop/Focus/blob/main/imgs/5.png?raw=true" width="200"/>
