@@ -307,7 +307,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/moon.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="MMCbox" Checked="MMCbox_Checked" Unchecked="MMCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=MDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons for night mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons during night mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                             </Grid>
                             <Grid Grid.Row="1" Margin="10">
@@ -317,7 +317,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/game.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="GMCbox" Checked="GMCbox_Checked" Unchecked="GMCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=GDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons for game mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons during game mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                             </Grid>
                             <Grid Grid.Row="2" Margin="10">
@@ -327,7 +327,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/work.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="WMCbox" Checked="WMCbox_Checked" Unchecked="WMCbox_Unchecked"  Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=WDesktop}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons for work mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated desktop icons during work mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                             </Grid>
                         </Grid>
@@ -358,12 +358,12 @@
                             <Grid Margin="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="5*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/moon.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="MBCbox" Checked="MBCbox_Checked" Unchecked="MBCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=MBackground}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images for night mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images during night mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                                 <TextBlock Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="10" Text="{Binding Source={x:Static p:Settings.Default}, Path=MBg}"/>
                                 <Border x:Name="SMBFile" MouseDown="SMBFile_MouseDown" Background="#dcdde1" Margin="10" Grid.Column="2" HorizontalAlignment="Left">
@@ -373,12 +373,12 @@
                             <Grid Grid.Row="1" Margin="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="5*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/game.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="GBCbox" Checked="GBCbox_Checked" Unchecked="GBCbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=GBackground}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images for game mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images during game mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                                 <TextBlock Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="10" Text="{Binding Source={x:Static p:Settings.Default}, Path=GBg}"/>
                                 <Border x:Name="SGBFile" MouseDown="SGBFile_MouseDown" Background="#dcdde1" Margin="10" Grid.Column="2" HorizontalAlignment="Left">
@@ -389,12 +389,12 @@
                             <Grid Grid.Row="2" Margin="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="5*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                                 <Image Source="images/work.png" Margin="10" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <CheckBox x:Name="WBbox" Checked="WBbox_Checked" Unchecked="WBbox_Unchecked" Style="{DynamicResource SettingsCboxes}" FlowDirection="RightToLeft" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=WBackground}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images for work mode: " FontSize="20" FontFamily="arial"/>
+                                    <TextBlock FlowDirection="LeftToRight" Text="Separated background images during work mode: " FontSize="20" FontFamily="arial"/>
                                 </CheckBox>
                                 <TextBlock Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="10" Text="{Binding Source={x:Static p:Settings.Default}, Path=WBg}"/>
                                 <Border x:Name="SWBFile" MouseDown="SWBFile_MouseDown" Background="#dcdde1" Margin="10" Grid.Column="2" HorizontalAlignment="Left">
