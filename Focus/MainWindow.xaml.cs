@@ -95,7 +95,7 @@ namespace Focus
             if(WMod == 5) ChangeMode(Modes.Default);
         }
 
-        private void Night_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void Night_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
@@ -107,15 +107,15 @@ namespace Focus
                 else
                 {
                     TurnOff(Modes.Night);
-                    CMod = Modes.Night;
                     Storyboard sb = Night.FindResource("Activate") as Storyboard;
                     sb.Begin();
                     ChangeMode(Modes.Night);
+                    CMod = Modes.Night;
                 }
             }
         }
 
-        private void Gaming_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void Gaming_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
@@ -127,15 +127,15 @@ namespace Focus
                 else
                 {
                     TurnOff(Modes.Game);
-                    CMod = Modes.Game;
                     Storyboard sb = Gaming.FindResource("Activate") as Storyboard;
                     sb.Begin();
                     ChangeMode(Modes.Game);
+                    CMod = Modes.Game;
                 }
             }
         }
 
-        private void Working_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void Working_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
@@ -147,10 +147,10 @@ namespace Focus
                 else
                 {
                     TurnOff(Modes.Work);
-                    CMod = Modes.Work;
                     Storyboard sb = Working.FindResource("Activate") as Storyboard;
                     sb.Begin();
                     ChangeMode(Modes.Work);
+                    CMod = Modes.Work;
                 }
             }
         }
@@ -260,7 +260,7 @@ namespace Focus
         #endregion
 
         #region separated desktop
-        public void SDesktop(string dir, string wm, string Desktop)
+        public void SDesktop(string dir, string wm, string Desktop, bool bdesktop)
         {
             MKDir(dir);
             if (!Directory.Exists(dir + @"\focus" + wm))
@@ -272,7 +272,7 @@ namespace Focus
                 Directory.CreateDirectory(dir + @"\focus" + wm + @"\Desktop");
             }
             //Backing up current desktop
-            if (!IsDirectoryEmpty(Desktop))
+            if (!IsDirectoryEmpty(Desktop) && bdesktop)
             {
                 if (!IsDirectoryEmpty(dir + @"\focus\Desktop"))
                 {
@@ -302,19 +302,20 @@ namespace Focus
 
         public async void ChangeMode(int mode)
         {
+            Debug.WriteLine(mode);
             String dir = Properties.Settings.Default.SaveFolder;
             String Desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             //Debug.WriteLine(dir);
             String wm = "";
-            if (CMod == Modes.Night)
+            if (mode == Modes.Night)
             {
                 wm = @"\Night";
             }
-            else if (CMod == Modes.Game)
+            else if (mode == Modes.Game)
             {
                 wm = @"\Game";
             }
-            else if (CMod == Modes.Work)
+            else if (mode == Modes.Work)
             {
                 wm = @"\Work";
             }
@@ -323,13 +324,17 @@ namespace Focus
                 //Separated desktop
                 if (Properties.Settings.Default.MDesktop)
                 {
-                    SDesktop(dir, wm, Desktop);
+                    if(CMod == Modes.Default) SDesktop(dir, wm, Desktop, true);
+                    else SDesktop(dir, wm, Desktop, false);
                 }
                 #region background
                 if (Properties.Settings.Default.MBackground)
                 {
-                    Properties.Settings.Default.DBg = CurrentWallpapperPath();
-                    Properties.Settings.Default.Save();
+                    if(CMod == Modes.Default)
+                    {
+                        Properties.Settings.Default.DBg = CurrentWallpapperPath();
+                        Properties.Settings.Default.Save();
+                    }
                     if (File.Exists(Properties.Settings.Default.MBg)) SetWallpapper(Properties.Settings.Default.MBg);
                     else MessageBox.Show("Background file not found! Set the file in the settings!");
                 }
@@ -340,14 +345,18 @@ namespace Focus
             {
                 if (Properties.Settings.Default.GDesktop)
                 {
-                    SDesktop(dir, wm, Desktop);
+                    if (CMod == Modes.Default) SDesktop(dir, wm, Desktop, true);
+                    else SDesktop(dir, wm, Desktop, false);
                 }
                 #region background
                 if (Properties.Settings.Default.GBackground)
                 {
-                    Properties.Settings.Default.DBg = CurrentWallpapperPath();
-                    Properties.Settings.Default.Save();
-                    if(File.Exists(Properties.Settings.Default.GBg)) SetWallpapper(Properties.Settings.Default.GBg);
+                    if (CMod == Modes.Default)
+                    {
+                        Properties.Settings.Default.DBg = CurrentWallpapperPath();
+                        Properties.Settings.Default.Save();
+                    }
+                    if (File.Exists(Properties.Settings.Default.GBg)) SetWallpapper(Properties.Settings.Default.GBg);
                     else MessageBox.Show("Background file not found! Set the file in the settings!");
                 }
                 #endregion
@@ -356,13 +365,17 @@ namespace Focus
             {
                 if (Properties.Settings.Default.WDesktop)
                 {
-                    SDesktop(dir, wm, Desktop);
+                    if (CMod == Modes.Default) SDesktop(dir, wm, Desktop, true);
+                    else SDesktop(dir, wm, Desktop, false);
                 }
                 #region background
                 if (Properties.Settings.Default.WBackground)
                 {
-                    Properties.Settings.Default.DBg = CurrentWallpapperPath();
-                    Properties.Settings.Default.Save();
+                    if (CMod == Modes.Default)
+                    {
+                        Properties.Settings.Default.DBg = CurrentWallpapperPath();
+                        Properties.Settings.Default.Save();
+                    }
                     if (File.Exists(Properties.Settings.Default.WBg)) SetWallpapper(Properties.Settings.Default.WBg);
                     else MessageBox.Show("Background file not found! Set the file in the settings!");
                 }
