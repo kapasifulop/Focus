@@ -34,6 +34,7 @@ namespace Focus
         private readonly DesktopRegistry _registry = new DesktopRegistry();
         private readonly Storage _storage = new Storage();
 
+        public DateTime lastClick = DateTime.Now;
 
         public IDictionary<string, string> registryValues;
         NamedDesktopPoint[] iconPositions;
@@ -155,7 +156,17 @@ namespace Focus
 
         private void Top_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left) this.DragMove();
+            if (e.ChangedButton != MouseButton.Left) return;
+            TimeSpan eq = DateTime.Now - lastClick;
+            if (eq < TimeSpan.FromMilliseconds(225))
+            {
+                this.WindowState = WindowState.Minimized;
+            }
+            else
+            {
+                this.DragMove();
+            }
+            lastClick = DateTime.Now;
         }
 
         public async void TurnOff(int WMod = 5)
