@@ -8,3 +8,4 @@
 <h3>Settings</h3>
 <img src="https://github.com/kapasifulop/Focus/blob/main/imgs/3.png?raw=true"/>
 <img src="https://github.com/kapasifulop/Focus/blob/main/imgs/4.png?raw=true"/>
+(We created the FocusService, but we don't use that currently)
