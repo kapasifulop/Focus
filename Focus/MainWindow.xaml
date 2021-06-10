@@ -6,7 +6,7 @@
         xmlns:p="clr-namespace:Focus.Properties"
         xmlns:local="clr-namespace:Focus"
         mc:Ignorable="d"
-        Title="Focus" WindowStyle="None" MaxHeight="200" MaxWidth="200" AllowsTransparency="True" Background="Transparent" Height="2000" Width="2000" x:Name="MWindow" RenderOptions.BitmapScalingMode="HighQuality">
+        Title="Focus" WindowStyle="None" MaxHeight="200" MaxWidth="200" AllowsTransparency="True" Background="Transparent" Height="2000" Width="2000" x:Name="MWindow" RenderOptions.BitmapScalingMode="HighQuality" Closing="MWindow_Closing">
     <Window.Resources>
         <Storyboard x:Key="ResizeB">
             <DoubleAnimation

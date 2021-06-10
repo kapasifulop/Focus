@@ -104,18 +104,24 @@ namespace Focus
                 timingTable.Rows.Add(timingRow);
                 timingTable.WriteXml(Paths.XML);
             }
+            CheckTiming();
+            #endregion
+        }
 
+        private void CheckTiming()
+        {
             int mode = Timing.Check();
-            if(mode != Modes.Default)
+            if (mode != Modes.Default)
             {
-                if(mode == Modes.Night)
+                if (mode == Modes.Night)
                 {
                     TurnOff(Modes.Night);
                     Storyboard sb = Night.FindResource("Activate") as Storyboard;
                     sb.Begin();
                     ChangeMode(Modes.Night);
                     CMod = Modes.Night;
-                }else if(mode == Modes.Game)
+                }
+                else if (mode == Modes.Game)
                 {
                     TurnOff(Modes.Game);
                     Storyboard sb = Gaming.FindResource("Activate") as Storyboard;
@@ -136,8 +142,6 @@ namespace Focus
                     MessageBox.Show("Invalid mode!");
                 }
             }
-
-            #endregion
         }
 
         public void restorePos(string FileName = "Default")
@@ -804,6 +808,97 @@ namespace Focus
                 Debug.WriteLine(of.FileName.ToString());
             }
             else Debug.WriteLine("No file // cancel");
+        }
+
+        private void MWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            String dir = Properties.Settings.Default.SaveFolder;
+            String Desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            #region BUP DESKTOP
+            String n = "";
+            if (CMod == Modes.Night)
+            {
+                n = @"\Night";
+                if (Properties.Settings.Default.MBackground) Properties.Settings.Default.MBg = CurrentWallpapperPath();
+
+                if (Properties.Settings.Default.MDesktop)
+                {
+
+
+                    DesktopRegistry dreg = new DesktopRegistry();
+                    var rval = dreg.GetRegistryValues();
+                    Desktop d = new Desktop();
+                    var ipos = d.GetIconsPositions();
+                    _storage.SaveIconPositions(ipos, rval, "Night");
+                }
+            }
+            else if (CMod == Modes.Game)
+            {
+                n = @"\Game";
+                if (Properties.Settings.Default.GBackground) Properties.Settings.Default.GBg = CurrentWallpapperPath();
+
+                if (Properties.Settings.Default.GDesktop)
+                {
+
+                    DesktopRegistry dreg = new DesktopRegistry();
+                    var rval = dreg.GetRegistryValues();
+                    Desktop d = new Desktop();
+                    var ipos = d.GetIconsPositions();
+                    _storage.SaveIconPositions(ipos, rval, "Game");
+                }
+            }
+            else if (CMod == Modes.Work)
+            {
+                n = @"\Work";
+                if (Properties.Settings.Default.WBackground) Properties.Settings.Default.WBg = CurrentWallpapperPath();
+
+                if (Properties.Settings.Default.WDesktop)
+                {
+
+                    Desktop d = new Desktop();
+                    DesktopRegistry dreg = new DesktopRegistry();
+                    var rval = dreg.GetRegistryValues();
+                    var ipos = d.GetIconsPositions();
+                    _storage.SaveIconPositions(ipos, rval, "Work");
+                }
+            }
+
+            MKDir(dir);
+            if (!Directory.Exists(dir + @"\focus" + n))
+            {
+                Directory.CreateDirectory(dir + @"\focus" + n);
+            }
+            if (!Directory.Exists(dir + @"\focus" + n + @"\Desktop"))
+            {
+                Directory.CreateDirectory(dir + @"\focus" + n + @"\Desktop");
+            }
+            //BACKUP
+            if (!IsDirectoryEmpty(Desktop))
+            {
+                if (!IsDirectoryEmpty(dir + @"\focus" + n + @"\Desktop"))
+                {
+                    Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
+                }
+                DirectoryCopy(Desktop, dir + @"\focus" + n + @"\Desktop");
+                Debug.WriteLine(Desktop + " - " + dir + @"\focus" + n + @"\Desktop");
+            }
+            else Directory.Delete(dir + @"\focus" + n + @"\Desktop", true);
+            #endregion
+            //Clear desktop
+            try
+            {
+                DirectoryDelete(Desktop);
+            }
+            catch
+            {
+                MessageBox.Show("Error while clearing desktop!");
+            }
+            if (!IsDirectoryEmpty(dir + @"\focus\Desktop")) DirectoryCopy(dir + @"\focus\Desktop", Desktop, true);
+            if (File.Exists(Properties.Settings.Default.DBg)) SetWallpapper(Properties.Settings.Default.DBg);
+
+            _desktop.Refresh();
+            restorePos();
+            _desktop.Refresh();
         }
     }
 }
