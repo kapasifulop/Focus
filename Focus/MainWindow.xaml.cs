@@ -39,6 +39,13 @@ namespace Focus
         public MainWindow()
         {
             InitializeComponent();
+            if (App.PriorProcess() != null)
+            {
+                //MessageBox.Show("Another instance of the app is already running.");
+                System.Windows.Application.Current.Shutdown();
+                return;
+            }
+
             #region Settings
             if (Properties.Settings.Default.SaveFolder.Trim() == "")
             {
