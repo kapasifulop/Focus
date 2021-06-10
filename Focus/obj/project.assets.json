@@ -1,102 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net5.0-windows7.0": {
-      "Extended.Wpf.Toolkit/4.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/net40/Xceed.Wpf.AvalonDock.Themes.Aero.dll": {},
-          "lib/net40/Xceed.Wpf.AvalonDock.Themes.Metro.dll": {},
-          "lib/net40/Xceed.Wpf.AvalonDock.Themes.VS2010.dll": {},
-          "lib/net40/Xceed.Wpf.AvalonDock.dll": {},
-          "lib/net40/Xceed.Wpf.Toolkit.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Xceed.Wpf.AvalonDock.Themes.Aero.dll": {},
-          "lib/net40/Xceed.Wpf.AvalonDock.Themes.Metro.dll": {},
-          "lib/net40/Xceed.Wpf.AvalonDock.Themes.VS2010.dll": {},
-          "lib/net40/Xceed.Wpf.AvalonDock.dll": {},
-          "lib/net40/Xceed.Wpf.Toolkit.dll": {}
-        },
-        "resource": {
-          "lib/net40/cs-CZ/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "cs-CZ"
-          },
-          "lib/net40/de/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net40/es/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "es"
-          },
-          "lib/net40/fr/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "fr"
-          },
-          "lib/net40/hu/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "hu"
-          },
-          "lib/net40/it/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "it"
-          },
-          "lib/net40/ja-JP/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "ja-JP"
-          },
-          "lib/net40/pt-BR/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "pt-BR"
-          },
-          "lib/net40/ro/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "ro"
-          },
-          "lib/net40/ru/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "ru"
-          },
-          "lib/net40/sv/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "sv"
-          },
-          "lib/net40/zh-Hans/Xceed.Wpf.AvalonDock.resources.dll": {
-            "locale": "zh-Hans"
-          }
-        }
-      }
-    }
+    "net5.0-windows7.0": {}
   },
-  "libraries": {
-    "Extended.Wpf.Toolkit/4.1.0": {
-      "sha512": "wXyuHE2ut8OIDUgi1dfyX1qVDQClc4ARmM9yfB0MAshudfaWhtXedWR34zSCIN2gu7CPzE3+u9iLvBv5uBxROg==",
-      "type": "package",
-      "path": "extended.wpf.toolkit/4.1.0",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.txt",
-        "Xceed_Logo_Retina-400x400.png",
-        "extended.wpf.toolkit.4.1.0.nupkg.sha512",
-        "extended.wpf.toolkit.nuspec",
-        "lib/net40/Xceed.Wpf.AvalonDock.Themes.Aero.dll",
-        "lib/net40/Xceed.Wpf.AvalonDock.Themes.Metro.dll",
-        "lib/net40/Xceed.Wpf.AvalonDock.Themes.VS2010.dll",
-        "lib/net40/Xceed.Wpf.AvalonDock.dll",
-        "lib/net40/Xceed.Wpf.Toolkit.dll",
-        "lib/net40/cs-CZ/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/de/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/es/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/fr/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/hu/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/it/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/ja-JP/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/pt-BR/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/ro/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/ru/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/sv/Xceed.Wpf.AvalonDock.resources.dll",
-        "lib/net40/zh-Hans/Xceed.Wpf.AvalonDock.resources.dll",
-        "tools/install.ps1"
-      ]
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net5.0-windows7.0": [
-      "Extended.Wpf.Toolkit >= 4.1.0"
-    ]
+    "net5.0-windows7.0": []
   },
   "packageFolders": {
     "C:\\Users\\Mr. Fullop\\.nuget\\packages\\": {},
@@ -144,12 +53,6 @@
     "frameworks": {
       "net5.0-windows7.0": {
         "targetAlias": "net5.0-windows",
-        "dependencies": {
-          "Extended.Wpf.Toolkit": {
-            "target": "Package",
-            "version": "[4.1.0, )"
-          }
-        },
         "imports": [
           "net461",
           "net462",
@@ -171,17 +74,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.300\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Extended.Wpf.Toolkit 4.1.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Extended.Wpf.Toolkit",
-      "targetGraphs": [
-        "net5.0-windows7.0"
-      ]
-    }
-  ]
+  }
 }
