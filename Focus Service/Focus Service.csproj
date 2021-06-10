@@ -7,7 +7,7 @@
     <ProjectGuid>{1B27A83C-0E3D-4B57-8943-1B34B02ADCA0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Focus_Service</RootNamespace>
-    <AssemblyName>Focus_Service</AssemblyName>
+    <AssemblyName>Focus Service</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -55,6 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Service1.resx">
+      <DependentUpon>Service1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

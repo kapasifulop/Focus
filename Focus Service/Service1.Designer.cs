@@ -1,7 +1,7 @@
 ﻿
 namespace Focus_Service
 {
-    partial class Service1
+    partial class FocusService
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,8 +29,11 @@ namespace Focus_Service
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "Service1";
+            // 
+            // FocusService
+            // 
+            this.ServiceName = "FocusService";
+
         }
 
         #endregion

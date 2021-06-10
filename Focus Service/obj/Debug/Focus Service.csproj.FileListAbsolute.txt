@@ -1,0 +1,8 @@
+D:\projects\focus\Focus\Focus Service\bin\Debug\Focus Service.exe.config
+D:\projects\focus\Focus\Focus Service\bin\Debug\Focus Service.exe
+D:\projects\focus\Focus\Focus Service\bin\Debug\Focus Service.pdb
+D:\projects\focus\Focus\Focus Service\obj\Debug\Focus_Service.FocusService.resources
+D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.csproj.GenerateResource.cache
+D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.csproj.CoreCompileInputs.cache
+D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.exe
+D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.pdb

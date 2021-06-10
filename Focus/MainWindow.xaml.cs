@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -36,6 +37,8 @@ namespace Focus
         public IDictionary<string, string> registryValues;
         NamedDesktopPoint[] iconPositions;
 
+        Timingset.TimingDataTable timingTable = new Timingset.TimingDataTable();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -44,6 +47,11 @@ namespace Focus
                 //MessageBox.Show("Another instance of the app is already running.");
                 System.Windows.Application.Current.Shutdown();
                 return;
+            }
+
+            if (!Directory.Exists(Paths.Focus))
+            {
+                Directory.CreateDirectory(Paths.Focus);
             }
 
             #region Settings
@@ -78,6 +86,24 @@ namespace Focus
             registryValues = _registry.GetRegistryValues();
             var iconPositions = _desktop.GetIconsPositions();
             _storage.SaveIconPositions(iconPositions, registryValues, "Default");
+
+            #region DataSet
+
+            if (File.Exists(Paths.XML))
+            {
+                timingTable.ReadXml(Paths.XML);
+            }
+            else
+            {
+                Timingset.TimingRow timingRow = timingTable.NewTimingRow();
+                timingRow["StartTime"] = DateTime.Now;
+                timingRow["EndTime"] = DateTime.Now.AddDays(1);
+                timingRow["Mode"] = 0;
+                timingRow["Enabled"] = false;
+                timingTable.Rows.Add(timingRow);
+                timingTable.WriteXml(Paths.XML);
+            }
+            #endregion
         }
 
         public void restorePos(string FileName = "Default")
