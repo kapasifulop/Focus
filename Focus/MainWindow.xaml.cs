@@ -1,4 +1,5 @@
 ﻿using Focus.ForDesktop;
+using Focus.timing;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -103,6 +104,39 @@ namespace Focus
                 timingTable.Rows.Add(timingRow);
                 timingTable.WriteXml(Paths.XML);
             }
+
+            int mode = Timing.Check();
+            if(mode != Modes.Default)
+            {
+                if(mode == Modes.Night)
+                {
+                    TurnOff(Modes.Night);
+                    Storyboard sb = Night.FindResource("Activate") as Storyboard;
+                    sb.Begin();
+                    ChangeMode(Modes.Night);
+                    CMod = Modes.Night;
+                }else if(mode == Modes.Game)
+                {
+                    TurnOff(Modes.Game);
+                    Storyboard sb = Gaming.FindResource("Activate") as Storyboard;
+                    sb.Begin();
+                    ChangeMode(Modes.Game);
+                    CMod = Modes.Game;
+                }
+                else if (mode == Modes.Work)
+                {
+                    TurnOff(Modes.Work);
+                    Storyboard sb = Working.FindResource("Activate") as Storyboard;
+                    sb.Begin();
+                    ChangeMode(Modes.Work);
+                    CMod = Modes.Work;
+                }
+                else
+                {
+                    MessageBox.Show("Invalid mode!");
+                }
+            }
+
             #endregion
         }
 

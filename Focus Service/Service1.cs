@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Focus;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,28 +8,25 @@ using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Focus_Service
 {
     public partial class FocusService : ServiceBase
     {
-        string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string focusFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\focus";
-        string comm_file = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\focus\service.data";
+        Thread Worker;
+        AutoResetEvent StopRequest = new AutoResetEvent(false);
+
+        Timingset.TimingDataTable timingTable = new Timingset.TimingDataTable();
 
         public FocusService()
         {
             InitializeComponent();
 
-            if (!Directory.Exists(focusFolder))
+            if (!Directory.Exists(Paths.Focus))
             {
-                Directory.CreateDirectory(focusFolder);
-            }
-
-            if (!File.Exists(comm_file))
-            {
-                File.WriteAllText(comm_file, "Autocreate");
+                Directory.CreateDirectory(Paths.Focus);
             }
         }
 
@@ -38,6 +36,10 @@ namespace Focus_Service
             {
                 case 1:
                     //Refresh time datas
+                    if (File.Exists(Paths.XML))
+                    {
+                        timingTable.ReadXml(Paths.XML);
+                    }
                     break;
                 default:
                     break;
@@ -52,6 +54,37 @@ namespace Focus_Service
         protected override void OnStop()
         {
 
+        }
+
+        private void DoWork(object arg)
+        {
+            // Worker thread loop
+            for (; ; )
+            {
+                // Run this code once every 10 seconds or stop right away if the service 
+                // is stopped
+                if (StopRequest.WaitOne(10000)) return;
+                // Do work...
+                //...
+                foreach(DataRow drow in timingTable.Rows)
+                {
+                    int Id = (int)drow["Id"] - 1;
+
+                    DateTime startTime = (DateTime)drow["StartTime"];
+                    DateTime endTime = (DateTime)drow["EndTime"];
+                    bool enabled = (bool)drow["Enabled"];
+                    int mode = (int)drow["Mode"];
+
+
+
+                    if(DateTime.Now > startTime && DateTime.Now < endTime && enabled)
+                    {
+                        //Inside startLoop
+                        timingTable.Rows[Id]["Enabled"] = false;
+                        timingTable.WriteXml(Paths.XML);
+                    }
+                }
+            }
         }
     }
 }
