@@ -762,6 +762,7 @@ namespace Focus
         }
         #endregion
 
+        #region SXBs
         private void SMBFile_MouseDown(object sender, MouseButtonEventArgs e)
         {
             OpenFileDialog of = new OpenFileDialog();
@@ -809,9 +810,11 @@ namespace Focus
             }
             else Debug.WriteLine("No file // cancel");
         }
+        #endregion
 
         private void MWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (CMod == Modes.Default) return;
             String dir = Properties.Settings.Default.SaveFolder;
             String Desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             #region BUP DESKTOP
@@ -895,7 +898,6 @@ namespace Focus
             }
             if (!IsDirectoryEmpty(dir + @"\focus\Desktop")) DirectoryCopy(dir + @"\focus\Desktop", Desktop, true);
             if (File.Exists(Properties.Settings.Default.DBg)) SetWallpapper(Properties.Settings.Default.DBg);
-
             _desktop.Refresh();
             restorePos();
             _desktop.Refresh();

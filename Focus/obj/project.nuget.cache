@@ -1,8 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "6HJV+bldiItTs5Eo6flGYUs2SJpEIGbfaf28pxTvcOxmFdDPExwpOSRtW4s8dWkYqloyKBiL1BFRnmtlej4GYg==",
+  "dgSpecHash": "qisSSbThLecuGkqHp3ATUbNskpHucDuf979gf2mYXlS1nwV+dB5I65Pf2zTBNxfMZ11313AzQlFdqDgb8xD8Tw==",
   "success": true,
   "projectFilePath": "D:\\projects\\focus\\Focus\\Focus\\Focus.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "expectedPackageFiles": [
+    "C:\\Users\\Mr. Fullop\\.nuget\\packages\\extended.wpf.toolkit\\4.1.0\\extended.wpf.toolkit.4.1.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Extended.Wpf.Toolkit 4.1.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Extended.Wpf.Toolkit",
+      "targetGraphs": [
+        "net5.0-windows7.0"
+      ]
+    }
+  ]
 }

@@ -6,3 +6,4 @@ D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.csproj.GenerateRes
 D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.csproj.CoreCompileInputs.cache
 D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.exe
 D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.pdb
+D:\projects\focus\Focus\Focus Service\obj\Debug\Focus Service.csproj.AssemblyReference.cache
