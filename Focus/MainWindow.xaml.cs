@@ -407,7 +407,6 @@ namespace Focus
             else if (mode == Modes.Game)
             {
                 wm = @"\Game";
-
             }
             else if (mode == Modes.Work)
             {
@@ -605,7 +604,7 @@ namespace Focus
         }
 
 
-        //ENTER SETTINGS
+        #region Enter Settings Animation
         private async void Settings_MouseDown(object sender, MouseButtonEventArgs e)
         {
             SettingsV.Visibility = Visibility.Visible;
@@ -629,7 +628,7 @@ namespace Focus
         {
             Properties.Settings.Default.Save();
         }
-
+        #endregion
         #region Checkboxes
         private void MMCbox_Checked(object sender, RoutedEventArgs e)
         {
