@@ -41,6 +41,8 @@ namespace Focus
 
         Timingset.TimingDataTable timingTable = new Timingset.TimingDataTable();
 
+        System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -107,7 +109,48 @@ namespace Focus
             }
             CheckTiming();
             #endregion
+
+            SetupNotify();
         }
+
+        #region notifyIcon
+        public void SetupNotify()
+        {
+            Stream iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/Focus;component/images/eye.ico")).Stream;
+            notifyIcon.Icon = new System.Drawing.Icon(iconStream);
+            notifyIcon.MouseClick += NotifyIcon_MouseClick;
+            notifyIcon.Visible = true;
+        }
+
+        private async void NotifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if(e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                if (this.Visibility == Visibility.Hidden)
+                {
+                    this.Visibility = Visibility.Visible;
+                    this.Focus();
+                }
+                else
+                {
+                    this.Visibility = Visibility.Hidden;
+                }
+            }else if(e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                ContextMenu cmenu = new ContextMenu();
+                MenuItem mi = new MenuItem();
+                mi.Header = "Exit";
+                mi.Click += Exit;
+                cmenu.Items.Add(mi);
+                cmenu.IsOpen = true;
+            }
+        }
+
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
 
         private void CheckTiming()
         {
@@ -160,7 +203,7 @@ namespace Focus
             TimeSpan eq = DateTime.Now - lastClick;
             if (eq < TimeSpan.FromMilliseconds(225))
             {
-                this.WindowState = WindowState.Minimized;
+                this.Visibility = Visibility.Hidden;
             }
             else
             {
@@ -912,6 +955,14 @@ namespace Focus
             _desktop.Refresh();
             restorePos();
             _desktop.Refresh();
+        }
+
+        private void MWindow_StateChanged(object sender, EventArgs e)
+        {
+            if(this.WindowState == WindowState.Minimized)
+            {
+                this.Visibility = Visibility.Hidden;
+            }
         }
     }
 }

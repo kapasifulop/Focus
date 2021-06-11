@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>eye.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -12,6 +13,8 @@
     <None Remove="images\background.png" />
     <None Remove="images\clock.png" />
     <None Remove="images\desktop.png" />
+    <None Remove="images\eye.ico" />
+    <None Remove="images\eye.png" />
     <None Remove="images\game.png" />
     <None Remove="images\loupe.png" />
     <None Remove="images\moon.png" />
@@ -25,6 +28,8 @@
     <Resource Include="images\background.png" />
     <Resource Include="images\clock.png" />
     <Resource Include="images\desktop.png" />
+    <Resource Include="images\eye.ico" />
+    <Resource Include="images\eye.png" />
     <Resource Include="images\game.png" />
     <Resource Include="images\loupe.png" />
     <Resource Include="images\moon.png" />
