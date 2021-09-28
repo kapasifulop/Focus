@@ -1,3 +1,5 @@
+# Warning
+## Some windows updates have killed my app and are now misaligning the icons. I don't have enough time to solve the problem, because I'm working on something else.
 # Focus
 ![gui](https://github.com/kapasifulop/Focus/blob/main/imgs/anim1.gif?raw=true)  
 ## [How to use](https://github.com/kapasifulop/Focus/wiki/Usage)
